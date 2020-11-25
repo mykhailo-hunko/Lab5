@@ -32,8 +32,6 @@
             this.textSubj = new System.Windows.Forms.TextBox();
             this.add = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.subject = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.TeacherOn = new System.Windows.Forms.Button();
@@ -44,7 +42,8 @@
             this.textIndex = new System.Windows.Forms.TextBox();
             this.Save = new System.Windows.Forms.Button();
             this.Start = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
+            this.sortUp = new System.Windows.Forms.Button();
+            this.sortDown = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -76,23 +75,10 @@
             // 
             this.dataGridView1.AllowUserToAddRows = false;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.name,
-            this.subject});
             this.dataGridView1.Location = new System.Drawing.Point(12, 51);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.Size = new System.Drawing.Size(491, 197);
             this.dataGridView1.TabIndex = 3;
-            // 
-            // name
-            // 
-            this.name.HeaderText = "Name";
-            this.name.Name = "name";
-            // 
-            // subject
-            // 
-            this.subject.HeaderText = "Subject";
-            this.subject.Name = "subject";
             // 
             // label1
             // 
@@ -114,21 +100,21 @@
             // 
             // TeacherOn
             // 
-            this.TeacherOn.Location = new System.Drawing.Point(31, 316);
+            this.TeacherOn.Location = new System.Drawing.Point(12, 316);
             this.TeacherOn.Name = "TeacherOn";
-            this.TeacherOn.Size = new System.Drawing.Size(75, 23);
+            this.TeacherOn.Size = new System.Drawing.Size(126, 23);
             this.TeacherOn.TabIndex = 6;
-            this.TeacherOn.Text = "Добавить";
+            this.TeacherOn.Text = "По преподавателю";
             this.TeacherOn.UseVisualStyleBackColor = true;
             this.TeacherOn.Click += new System.EventHandler(this.TeacherOn_Click);
             // 
             // SubjectOn
             // 
-            this.SubjectOn.Location = new System.Drawing.Point(31, 378);
+            this.SubjectOn.Location = new System.Drawing.Point(12, 378);
             this.SubjectOn.Name = "SubjectOn";
-            this.SubjectOn.Size = new System.Drawing.Size(75, 23);
+            this.SubjectOn.Size = new System.Drawing.Size(126, 23);
             this.SubjectOn.TabIndex = 7;
-            this.SubjectOn.Text = "Добавить";
+            this.SubjectOn.Text = "По предмету";
             this.SubjectOn.UseVisualStyleBackColor = true;
             this.SubjectOn.Click += new System.EventHandler(this.SubjectOn_Click);
             // 
@@ -152,7 +138,7 @@
             this.Remove.Name = "Remove";
             this.Remove.Size = new System.Drawing.Size(75, 23);
             this.Remove.TabIndex = 10;
-            this.Remove.Text = "Добавить";
+            this.Remove.Text = "Удалить";
             this.Remove.UseVisualStyleBackColor = true;
             this.Remove.Click += new System.EventHandler(this.Remove_Click);
             // 
@@ -165,11 +151,11 @@
             // 
             // Save
             // 
-            this.Save.Location = new System.Drawing.Point(634, 378);
+            this.Save.Location = new System.Drawing.Point(594, 378);
             this.Save.Name = "Save";
-            this.Save.Size = new System.Drawing.Size(75, 23);
+            this.Save.Size = new System.Drawing.Size(115, 23);
             this.Save.TabIndex = 12;
-            this.Save.Text = "Добавить";
+            this.Save.Text = "Сохранить в файл";
             this.Save.UseVisualStyleBackColor = true;
             this.Save.Click += new System.EventHandler(this.Save_Click);
             // 
@@ -177,28 +163,39 @@
             // 
             this.Start.Location = new System.Drawing.Point(31, 12);
             this.Start.Name = "Start";
-            this.Start.Size = new System.Drawing.Size(75, 23);
+            this.Start.Size = new System.Drawing.Size(107, 23);
             this.Start.TabIndex = 13;
-            this.Start.Text = "Добавить";
+            this.Start.Text = "Открыть файл";
             this.Start.UseVisualStyleBackColor = true;
             this.Start.Click += new System.EventHandler(this.Start_Click);
             // 
-            // button1
+            // sortUp
             // 
-            this.button1.Location = new System.Drawing.Point(409, 415);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 14;
-            this.button1.Text = "Добавить";
-            this.button1.UseVisualStyleBackColor = true;
-           
+            this.sortUp.Location = new System.Drawing.Point(340, 360);
+            this.sortUp.Name = "sortUp";
+            this.sortUp.Size = new System.Drawing.Size(179, 21);
+            this.sortUp.TabIndex = 14;
+            this.sortUp.Text = "Сортировать по возрастанию";
+            this.sortUp.UseVisualStyleBackColor = true;
+            this.sortUp.Click += new System.EventHandler(this.sortUp_Click);
+            // 
+            // sortDown
+            // 
+            this.sortDown.Location = new System.Drawing.Point(340, 398);
+            this.sortDown.Name = "sortDown";
+            this.sortDown.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.sortDown.Size = new System.Drawing.Size(179, 23);
+            this.sortDown.TabIndex = 15;
+            this.sortDown.Text = "Сортировать по убыванию";
+            this.sortDown.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(767, 450);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.sortDown);
+            this.Controls.Add(this.sortUp);
             this.Controls.Add(this.Start);
             this.Controls.Add(this.Save);
             this.Controls.Add(this.textIndex);
@@ -227,8 +224,6 @@
         private System.Windows.Forms.TextBox textSubj;
         private System.Windows.Forms.Button add;
         private System.Windows.Forms.DataGridView dataGridView1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn name;
-        private System.Windows.Forms.DataGridViewTextBoxColumn subject;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button TeacherOn;
@@ -239,7 +234,8 @@
         private System.Windows.Forms.TextBox textIndex;
         private System.Windows.Forms.Button Save;
         private System.Windows.Forms.Button Start;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button sortUp;
+        private System.Windows.Forms.Button sortDown;
     }
 }
 

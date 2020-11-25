@@ -2,26 +2,31 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using System.Xml.Serialization;
 
 namespace Lab5
 {
     public partial class Form1 : Form
     {
 
-        List<Person> list = new List<Person>();
-        private BindingSource BindingSource1 = new BindingSource();
+        // List<Person> list = new List<Person>();
+        //private BindingSource BindingSource1 = new BindingSource();
+        
+        
 
-        DataSet ds = new DataSet();
+        List<Person> listHelp;
+        BindingList<Person> list;
 
         public Form1()
         {
+            listHelp = new List<Person>();
+            list = new BindingList<Person>(listHelp);
             InitializeComponent();
+            dataGridView1.DataSource = list;
         }
 
         private void add_Click(object sender, EventArgs e)
@@ -32,65 +37,32 @@ namespace Lab5
             if(string.IsNullOrEmpty(teacher) || string.IsNullOrEmpty(subject))
             {
                 MessageBox.Show("Ошибка. Правильно заполните поля!");
-                return;
-            }
-            if(dataGridView1.ColumnCount == 0)
-            {
-                return;
-            }
-            if(list.Exists(x => x.name == teacher) && list.Exists(x => x.subject == subject))
-            {
-                MessageBox.Show("Такая пара значений уже есть!");
             }
             else
             {
                 list.Add(new Person(teacher, subject));
-                ds.Tables[0].Rows.Add(teacher, subject);
+               
             }
             
-        }
+        }//done
 
         private void TeacherOn_Click(object sender, EventArgs e)
         {
+
             string s = textSubject.Text;
             if (string.IsNullOrEmpty(s))
             {
                 return;
             }
 
-            var selectedUsers = (from user in list where user.subject == s select user.name).ToList();
-            string result = null;
-            foreach(string user in selectedUsers)
-            {
-                result += user + "\n";
-            }
-
-            if(result == null)
-            {
-                MessageBox.Show("Преподавателей не найдено!");
-            }
-            else
-            {
-                MessageBox.Show(result);
-            }
-        }
-
-        private void SubjectOn_Click(object sender, EventArgs e)
-        {
-            string s = textSubject.Text;
-            if (string.IsNullOrEmpty(s))
-            {
-                return;
-            }
-
-            var selectedUsers = (from user in list where user.subject == s select user.name).ToList();
-            string result = null;
+            var selectedUsers = (from user in list where user.name == s select user.subject).ToList();
+            string result = "";
             foreach (string user in selectedUsers)
             {
                 result += user + "\n";
             }
 
-            if (result == null)
+            if (result.Equals(""))
             {
                 MessageBox.Show("Предметов не найдено!");
             }
@@ -98,41 +70,56 @@ namespace Lab5
             {
                 MessageBox.Show(result);
             }
-        }
+           
+        }//done
 
-        private void Save_Click(object sender, EventArgs e)
+        private void SubjectOn_Click(object sender, EventArgs e)
         {
-            if(list.Count == 0)
+            string s = textTeacher.Text;
+            if (string.IsNullOrEmpty(s))
             {
                 return;
             }
 
-            SaveFileDialog sfd = new SaveFileDialog();
-            sfd.Filter = "XML|*.xml";
-
-            if(sfd.ShowDialog() == DialogResult.OK)
+            var selectedUsers = (from user in list where user.subject == s select user.name).ToList();
+            string result = "";
+            foreach (string user in selectedUsers)
             {
-                try
-                {
-                    ds.Tables[0].WriteXml(sfd.FileName);
-                } catch(Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
+                result += user + "\n";
             }
-        }
+
+            if (result.Equals(""))
+            {
+                MessageBox.Show("Преподавателей не найдено!");
+            }
+            else
+            {
+                MessageBox.Show(result);
+            }
+        }//done
+
+        private void Save_Click(object sender, EventArgs e)
+        {
+            XmlSerializer formatter = new XmlSerializer(typeof(BindingList<Person>));
+
+
+            using (FileStream fs = new FileStream(@"D:\lab5.xml", FileMode.Open))
+            {
+                formatter.Serialize(fs, list);
+            }
+        }//done
 
         private void Remove_Click(object sender, EventArgs e)
         {
             try
             {
                 int index = Convert.ToInt32(textIndex.Text) - 1;
-                string teacher = dataGridView1.Rows[index].Cells["Name"].Value.ToString();
-                string subject = dataGridView1.Rows[index].Cells["Subject"].Value.ToString();
+                string teacher = dataGridView1.Rows[index].Cells["name"].Value.ToString();
+                string subject = dataGridView1.Rows[index].Cells["subject"].Value.ToString();
 
-                var indexOf = list.FindIndex(x => x.name == teacher && x.subject == subject);
-                list.RemoveAt(indexOf);
-                ds.Tables[0].Rows.RemoveAt(index);
+               // var indexOf = list.FindIndex(x => x.name == teacher && x.subject == subject);
+                //list.RemoveAt(indexOf);
+                //ds.Tables[0].Rows.RemoveAt(index);
             }
             catch
             {
@@ -142,25 +129,23 @@ namespace Lab5
 
         private void Start_Click(object sender, EventArgs e)
         {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "XML|*.xml";
+            XmlSerializer formatter = new XmlSerializer(typeof(BindingList<Person>));
 
-            if (ofd.ShowDialog() == DialogResult.OK)
+
+            using (FileStream fs = new FileStream(@"D:\lab5.xml", FileMode.Open))
             {
-                try
-                {
-                    XmlReader xmlFile = XmlReader.Create(ofd.FileName, new XmlReaderSettings());
-                    ds.ReadXml(xmlFile);
-                    dataGridView1.DataSource = ds.Tables[0].DefaultView;
-                    dataGridView1.Rows.RemoveAt(0);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
+                list = (BindingList<Person>)formatter.Deserialize(fs);
             }
-        }
+        }//done
 
-        
+        private void sortUp_Click(object sender, EventArgs e)
+        {
+            foreach( Person p in list)
+            { 
+                listHelp.Sort((Person x, Person y) => x.name.CompareTo(y.name));
+            list.ResetBindings();
+            }
+           
+        }
     }
 }

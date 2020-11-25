@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace Lab5
 {
-    class Person
+    [Serializable]
+    public class Person
     {
+        
         public string name { get; set; }
         public string subject { get; set; }
 
