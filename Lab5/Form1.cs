@@ -14,19 +14,20 @@ namespace Lab5
     {
 
         // List<Person> list = new List<Person>();
-        //private BindingSource BindingSource1 = new BindingSource();
+        private BindingSource BindingSource1 = new BindingSource();
         
         
 
-        List<Person> listHelp;
-        BindingList<Person> list;
+        List<Person> list;
+        //BindingList<Person> list;
 
         public Form1()
         {
-            listHelp = new List<Person>();
-            list = new BindingList<Person>(listHelp);
+            list = new List<Person>();
+            //   list = new BindingList<Person>(list);
+            BindingSource1.DataSource = list;
             InitializeComponent();
-            dataGridView1.DataSource = list;
+            dataGridView1.DataSource = BindingSource1;
         }
 
         private void add_Click(object sender, EventArgs e)
@@ -43,7 +44,7 @@ namespace Lab5
                 list.Add(new Person(teacher, subject));
                
             }
-            
+            BindingSource1.ResetBindings(true);
         }//done
 
         private void TeacherOn_Click(object sender, EventArgs e)
@@ -100,10 +101,10 @@ namespace Lab5
 
         private void Save_Click(object sender, EventArgs e)
         {
-            XmlSerializer formatter = new XmlSerializer(typeof(BindingList<Person>));
+            XmlSerializer formatter = new XmlSerializer(typeof(List<Person>));
 
 
-            using (FileStream fs = new FileStream(@"D:\lab5.xml", FileMode.Open))
+            using (FileStream fs = new FileStream(@"D:\lab5.xml", FileMode.Truncate))
             {
                 formatter.Serialize(fs, list);
             }
@@ -117,9 +118,9 @@ namespace Lab5
                 string teacher = dataGridView1.Rows[index].Cells["name"].Value.ToString();
                 string subject = dataGridView1.Rows[index].Cells["subject"].Value.ToString();
 
-               // var indexOf = list.FindIndex(x => x.name == teacher && x.subject == subject);
-                //list.RemoveAt(indexOf);
-                //ds.Tables[0].Rows.RemoveAt(index);
+               var indexOf = list.FindIndex(x => x.name == teacher && x.subject == subject);
+                list.RemoveAt(indexOf);
+                BindingSource1.ResetBindings(true);
             }
             catch
             {
@@ -129,23 +130,32 @@ namespace Lab5
 
         private void Start_Click(object sender, EventArgs e)
         {
-            XmlSerializer formatter = new XmlSerializer(typeof(BindingList<Person>));
+            XmlSerializer formatter = new XmlSerializer(typeof(List<Person>));
 
 
             using (FileStream fs = new FileStream(@"D:\lab5.xml", FileMode.Open))
             {
-                list = (BindingList<Person>)formatter.Deserialize(fs);
+                list = (List<Person>)formatter.Deserialize(fs);
             }
+            BindingSource1.DataSource = list;
+            BindingSource1.ResetBindings(true);
         }//done
 
-        private void sortUp_Click(object sender, EventArgs e)
+        private void sortUp_Click(object sender, EventArgs e)//done
         {
-            foreach( Person p in list)
-            { 
-                listHelp.Sort((Person x, Person y) => x.name.CompareTo(y.name));
-            list.ResetBindings();
-            }
-           
+            var newList = list.OrderBy(p => p.name).ToList(); //.Sort((Person x, Person y) => x.name.CompareTo(y.name));
+            list = newList;
+            BindingSource1.DataSource = list;
+            BindingSource1.ResetBindings(false);
+
+        }
+
+        private void sortDown_Click(object sender, EventArgs e)//done
+        {
+            var newList = list.OrderByDescending(p => p.name).ToList(); //.Sort((Person x, Person y) => x.name.CompareTo(y.name));
+            list = newList;
+            BindingSource1.DataSource = list;
+            BindingSource1.ResetBindings(false);
         }
     }
 }

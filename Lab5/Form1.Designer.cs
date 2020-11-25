@@ -188,6 +188,7 @@
             this.sortDown.TabIndex = 15;
             this.sortDown.Text = "Сортировать по убыванию";
             this.sortDown.UseVisualStyleBackColor = true;
+            this.sortDown.Click += new System.EventHandler(this.sortDown_Click);
             // 
             // Form1
             // 
